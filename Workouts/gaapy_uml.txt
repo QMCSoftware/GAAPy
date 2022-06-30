@@ -1,0 +1,105 @@
+@startuml
+title GAAPY UML
+
+abstract class SolutionAlgorithm
+abstract class RealValuedFunction
+abstract class StopCriteria
+abstract class PositiveNumber
+
+RealValuedFunction <|-- Function1D
+Function1D <|-- LinearSpline1D
+Function1D <|-- QuadraticSpline1D
+SolutionAlgorithm <|-- Function1DApprox
+Function1DApprox <|-- LinearSpline1DApprox
+SolutionAlgorithm <|-- Function1DMin
+Function1DMin <|-- Splines1DMin
+StopCriteria <|-- AbsoluteStopCriteria
+StopCriteria <|-- RelativeStopCriteria
+StopCriteria <|-- GeneralizedStopCriteria
+PositiveNumber <|-- PositiveInt
+PositiveNumber <|-- PositiveReal
+
+
+abstract class SolutionAlgorithm {
+    f: RealValuedFunction
+    sc: StopCriteria
+    g   // output depending on SolutionAlgorithm
+
+    g approximate()
+    np.array _sample()
+    np.array _error_est()
+    bool _is_stop()
+    _validate_inputs()
+    _validate_outputs()
+}
+
+abstract class Function1DApprox {
+    g: RealValuedFunction
+
+    g approximate()
+}
+
+class LinearSpline1DApprox {
+    g: LinearSpline1D
+}
+
+abstract class Function1DMin {
+     g: np.array
+
+}
+
+class Splines1DMin {
+     _l: LinearSpline1D
+     _q: QuadraticSpline1D
+ }
+
+abstract class RealValuedFunction {
+  f:  // a Python function
+  dim: PositiveInt
+  domain: np.array
+  range: np.array
+  np.array eval(x: np.array)
+  _validate_inputs()
+}
+
+class Function1D {
+    dim=1
+    domain=[0,1]
+    range=[-np.Inf, np.Inf]
+}
+
+class LinearSpline1D {
+  nodes: np.array
+}
+
+class QuadraticSpline1D {
+  nodes: np.array
+}
+
+
+
+abstract class StopCriteria  {
+    tol: PositiveReal
+    max_n: PositiveInt
+    max_iter: PositiveInt
+    is_stop: bool
+    is_success: bool
+    error_flag: PositiveInt
+
+    float compute_error_bound()
+    bool is_stop(error_bound: PositiveReal, n: PositiveInt, iter: PositiveInt)
+}
+
+abstract class PositiveNumber {
+    x: numbers.Number
+    validate_positive()
+}
+
+ class PositiveInt {
+    x: int
+ }
+
+class PositiveReal {
+    x: numbers.Real
+}
+@enduml
